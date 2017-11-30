@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>war</packaging>
 
-  <name>file-service</name>
+  <name>file-server</name>
   <groupId>dengji85</groupId>
-  <artifactId>file-service</artifactId>
+  <artifactId>file-server</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 <parent>
 		<groupId>org.springframework.boot</groupId>
