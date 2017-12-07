@@ -1,9 +1,14 @@
 package com.waylau.spring.boot.fileserver.domain;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 /**
  * File 文档类.
@@ -23,6 +28,20 @@ public class File {
     private byte[] content; // 文件内容
     private String path; // 文件路径
     
+    
+    public DBObject getMetaData(){
+    	DBObject metaData = new  BasicDBObject();
+    	metaData.put("name", name);
+    	metaData.put("contentType", contentType);
+    	
+		return metaData;
+    	
+    }
+    public InputStream getInputStream() {
+		return new ByteArrayInputStream(content);
+		
+	}
+
     public String getPath() {
 		return path;
 	}

@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.waylau.spring.boot.fileserver.domain.File;
+import com.waylau.spring.boot.fileserver.service.FileGridFsService;
 import com.waylau.spring.boot.fileserver.service.FileService;
 import com.waylau.spring.boot.fileserver.util.MD5Util;
 
@@ -39,7 +40,8 @@ public class FileController {
     
     @Value("${server.port}")
     private String serverPort;
-    
+    @Autowired
+    private FileGridFsService fileGridFsService;
     @RequestMapping(value = "/")
     public String index(Model model) {
     	// 展示最新二十条数据
@@ -124,6 +126,7 @@ public class FileController {
         	File f = new File(file.getOriginalFilename(),  file.getContentType(), file.getSize(), file.getBytes());
         	f.setMd5( MD5Util.getMD5(file.getInputStream()) );
         	fileService.saveFile(f);
+        	//fileGridFsService.save(f);
         } catch (IOException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
             redirectAttributes.addFlashAttribute("message",
