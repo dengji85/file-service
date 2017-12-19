@@ -1,6 +1,7 @@
 package com.waylau.spring.boot.server.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -13,8 +14,10 @@ import com.mongodb.MongoClient;
 @Configuration
 public class GridFsConfig extends AbstractMongoConfiguration{
 	
+	
 	@Autowired
 	Environment env;
+	
 	@Bean
 	public GridFsTemplate gridFsTemplate() throws Exception {
 		return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter());

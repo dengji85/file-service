@@ -1,7 +1,9 @@
 package com.waylau.spring.boot.fileserver.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -22,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.operation.FsyncUnlockOperation;
 import com.waylau.spring.boot.fileserver.domain.File;
+import com.waylau.spring.boot.fileserver.service.FileGridFsService;
 import com.waylau.spring.boot.fileserver.service.FileService;
 import com.waylau.spring.boot.fileserver.util.MD5Util;
 
@@ -31,6 +36,8 @@ import com.waylau.spring.boot.fileserver.util.MD5Util;
 public class CkeditFileUploadController {
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private FileGridFsService fileGridFsService;
 	@Value("${com.dengji85.address}")
 	private String serverAddress;
 
@@ -93,8 +100,9 @@ public class CkeditFileUploadController {
 		response.setContentType("image/gif");
 		try {
 			OutputStream out = response.getOutputStream();
-			File file = fileService.getFileById(id);
-			out.write(file.getContent());
+			//File file = fileService.getFileById(id);
+			GridFSDBFile f = fileGridFsService.getById(id);
+			out.write(getByteArray(f.getInputStream()));
 			out.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,5 +115,32 @@ public class CkeditFileUploadController {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * 
+	* @Title: getByteArray  
+	* @Description: 流转为byte数组
+	* @return byte[]    返回类型  
+	* @throws
+	 */
+	private byte[] getByteArray(InputStream in) {
+		byte[] datas = null;
+		try {
+
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			byte[] b = new byte[1024];
+
+			int count = -1;
+			while ((count = in.read(b)) != -1) {
+				bos.write(b, 0, count);
+
+			}
+			datas = bos.toByteArray();
+			bos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return datas;
 	}
 }

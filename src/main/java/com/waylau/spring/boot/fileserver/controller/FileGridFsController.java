@@ -172,5 +172,26 @@ public class FileGridFsController {
 		}
 		return datas;
 	}
+	
+	/**
+	 * 在线显示文件
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("/t/view/{id}")
+	@ResponseBody
+	public Object serveFileOnlinet(@PathVariable String id) {
+
+		GridFSDBFile file = gridFsService.getById(id);
+
+		if (file != null) {
+			return file;
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+					"File was not fount");
+		}
+
+	}
 
 }
